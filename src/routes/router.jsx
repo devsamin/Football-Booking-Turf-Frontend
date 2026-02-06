@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage";
 import Booking from "../components/booking/Booking";
 import Register from "../components/authentication/Register";
 import Login from "../components/authentication/Login";
+import CustomerDashboard from "../components/dashboard/CustomerDashboard";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/customer-dashboard",
+        element: <CustomerDashboard />,
       },
     ],
   },
