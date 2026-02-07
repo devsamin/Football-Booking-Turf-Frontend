@@ -5,6 +5,7 @@ import Booking from "../components/booking/Booking";
 import Register from "../components/authentication/Register";
 import Login from "../components/authentication/Login";
 import CustomerDashboard from "../components/dashboard/CustomerDashboard";
+import BookingPage from "../components/booking/BookingPage";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/booking",
-        element: <Booking />,
+        // element: <Booking />,
+        element: <BookingPage />,
       },
       {
         path: "/register",
