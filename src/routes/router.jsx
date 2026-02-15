@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../components/layout/RootLayout";
 import HomePage from "../pages/HomePage";
-import Booking from "../components/booking/Booking";
+// import Booking from "../components/booking/Booking";
 import Register from "../components/authentication/Register";
 import Login from "../components/authentication/Login";
 import CustomerDashboard from "../components/dashboard/CustomerDashboard";
 import BookingPage from "../components/booking/BookingPage";
+import MyBookings from "../components/booking/MyBookings";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,11 @@ const router = createBrowserRouter([
         path: "/booking",
         // element: <Booking />,
         element: <BookingPage />,
+      },
+
+      {
+        path: "/my-bookings",
+        element: <MyBookings />,
       },
       {
         path: "/register",
