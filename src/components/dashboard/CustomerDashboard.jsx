@@ -1,19 +1,30 @@
-// import React, { useState } from "react";
+// import React, { useEffect, useState } from "react";
 // import { Link } from "react-router-dom";
 // import { User, Calendar } from "lucide-react";
+// import api from "../../services/api";
 
 // const CustomerDashboard = () => {
-//   const user = {
-//     name: "রহিম আহমেদ",
-//     email: "rahim@email.com",
-//     phone: "+880 1712-111111",
-//     totalBookings: 0,
-//   };
-
-//   const upcomingBookings = []; // ভবিষ্যতে API থেকে আসবে
-//   const pastBookings = []; // ভবিষ্যতে API থেকে আসবে
-
+//   const [user, setUser] = useState(null);
 //   const [activeTab, setActiveTab] = useState("upcoming");
+//   const [loading, setLoading] = useState(true);
+
+//   const upcomingBookings = [];
+//   const pastBookings = [];
+
+//   useEffect(() => {
+//     const fetchUser = async () => {
+//       try {
+//         const res = await api.get("auth/profile/");
+//         setUser(res.data);
+//       } catch (err) {
+//         console.error("Failed to load user:", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchUser();
+//   }, []);
 
 //   const renderEmptyState = (text) => (
 //     <div className="bg-white rounded-2xl shadow p-10 flex flex-col items-center justify-center text-center">
@@ -30,12 +41,20 @@
 //     </div>
 //   );
 
+//   if (loading) {
+//     return <p className="p-6">লোড হচ্ছে...</p>;
+//   }
+
+//   if (!user) {
+//     return <p className="p-6 text-red-500">User data লোড করা যায়নি</p>;
+//   }
+
 //   return (
 //     <div className="min-h-screen bg-gray-50 p-6">
 //       {/* Header */}
 //       <div className="mb-6">
 //         <h1 className="text-3xl font-bold">কাস্টমার ড্যাশবোর্ড</h1>
-//         <p className="text-gray-600">স্বাগতম, {user.name}</p>
+//         <p className="text-gray-600">স্বাগতম, {user.username}</p>
 //       </div>
 
 //       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -49,7 +68,7 @@
 //           <div className="space-y-3 text-sm">
 //             <div>
 //               <p className="text-gray-500">নাম</p>
-//               <p className="font-medium">{user.name}</p>
+//               <p className="font-medium">{user.username}</p>
 //             </div>
 
 //             <div>
@@ -65,7 +84,7 @@
 //             <div>
 //               <p className="text-gray-500">মোট বুকিং</p>
 //               <p className="text-green-600 text-xl font-bold">
-//                 {user.totalBookings}
+//                 {upcomingBookings.length + pastBookings.length}
 //               </p>
 //             </div>
 //           </div>
@@ -116,7 +135,6 @@
 //                     key={booking.id}
 //                     className="bg-white p-4 rounded-xl shadow"
 //                   >
-//                     {/* Booking Card UI এখানে আসবে */}
 //                     বুকিং #{booking.id}
 //                   </div>
 //                 ))}
@@ -131,7 +149,6 @@
 //                   key={booking.id}
 //                   className="bg-white p-4 rounded-xl shadow"
 //                 >
-//                   {/* Booking Card UI এখানে আসবে */}
 //                   বুকিং #{booking.id}
 //                 </div>
 //               ))}
@@ -147,31 +164,112 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { User, Calendar } from "lucide-react";
+import { User, Calendar, Clock, DollarSign } from "lucide-react";
 import api from "../../services/api";
 
 const CustomerDashboard = () => {
   const [user, setUser] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [activeTab, setActiveTab] = useState("upcoming");
   const [loading, setLoading] = useState(true);
 
-  const upcomingBookings = [];
-  const pastBookings = [];
-
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.get("auth/profile/");
-        setUser(res.data);
+        const userRes = await api.get("auth/profile/");
+        setUser(userRes.data);
+
+        const bookingRes = await api.get("/bookings/my-bookings/");
+        setBookings(bookingRes.data);
       } catch (err) {
-        console.error("Failed to load user:", err);
+        console.error("Failed to load data:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    fetchData();
   }, []);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcomingBookings = bookings.filter((b) => new Date(b.date) >= today);
+
+  const pastBookings = bookings.filter((b) => new Date(b.date) < today);
+
+  const renderBookingCard = (booking) => (
+    <div key={booking.id} className="bg-white rounded-2xl shadow p-6">
+      {/* Top Section */}
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            {booking.status === "confirmed" && (
+              <span className="bg-green-500 text-white px-2 py-0.5 text-xs rounded-md">
+                কনফার্মড
+              </span>
+            )}
+
+            {booking.status === "pending" && (
+              <span className="border border-orange-500 text-orange-500 px-2 py-0.5 text-xs rounded-md">
+                পেন্ডিং
+              </span>
+            )}
+
+            {booking.status === "cancelled" && (
+              <span className="bg-red-500 text-white px-2 py-0.5 text-xs rounded-md">
+                বাতিল
+              </span>
+            )}
+          </div>
+
+          <p className="text-sm text-gray-600">
+            বুকিং ID: booking-{booking.id}
+          </p>
+        </div>
+      </div>
+
+      {/* Details Section */}
+      <div className="grid md:grid-cols-3 gap-4">
+        {/* Date */}
+        <div className="flex items-start gap-2">
+          <Calendar className="h-5 w-5 text-gray-600 mt-0.5" />
+          <div>
+            <p className="text-sm text-gray-600">তারিখ</p>
+            <p className="font-semibold">
+              {new Date(booking.date).toLocaleDateString("bn-BD", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+          </div>
+        </div>
+
+        {/* Time */}
+        <div className="flex items-start gap-2">
+          <Clock className="h-5 w-5 text-gray-600 mt-0.5" />
+          <div>
+            <p className="text-sm text-gray-600">সময়</p>
+            <p className="font-semibold">
+              {booking.start_time} - {booking.end_time}
+            </p>
+          </div>
+        </div>
+
+        {/* Price */}
+        <div className="flex items-start gap-2">
+          <DollarSign className="h-5 w-5 text-gray-600 mt-0.5" />
+          <div>
+            <p className="text-sm text-gray-600">মূল্য</p>
+            <p className="font-semibold text-lg text-green-600">
+              ৳{booking.price}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderEmptyState = (text) => (
     <div className="bg-white rounded-2xl shadow p-10 flex flex-col items-center justify-center text-center">
@@ -205,7 +303,7 @@ const CustomerDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Profile Card */}
+        {/* Profile Card */}
         <div className="bg-white rounded-2xl shadow p-6">
           <div className="flex items-center gap-2 mb-4">
             <User className="text-gray-600" />
@@ -225,13 +323,13 @@ const CustomerDashboard = () => {
 
             <div>
               <p className="text-gray-500">ফোন</p>
-              <p className="font-medium">{user.phone}</p>
+              <p className="font-medium">{user.phone || "N/A"}</p>
             </div>
 
             <div>
               <p className="text-gray-500">মোট বুকিং</p>
               <p className="text-green-600 text-xl font-bold">
-                {upcomingBookings.length + pastBookings.length}
+                {bookings.length}
               </p>
             </div>
           </div>
@@ -271,34 +369,20 @@ const CustomerDashboard = () => {
             </button>
           </div>
 
-          {/* Content */}
+          {/* Booking List */}
           {activeTab === "upcoming" ? (
             upcomingBookings.length === 0 ? (
               renderEmptyState("কোনো আসন্ন বুকিং নেই")
             ) : (
               <div className="space-y-4">
-                {upcomingBookings.map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="bg-white p-4 rounded-xl shadow"
-                  >
-                    বুকিং #{booking.id}
-                  </div>
-                ))}
+                {upcomingBookings.map(renderBookingCard)}
               </div>
             )
           ) : pastBookings.length === 0 ? (
             renderEmptyState("কোনো পূর্ববর্তী বুকিং নেই")
           ) : (
             <div className="space-y-4">
-              {pastBookings.map((booking) => (
-                <div
-                  key={booking.id}
-                  className="bg-white p-4 rounded-xl shadow"
-                >
-                  বুকিং #{booking.id}
-                </div>
-              ))}
+              {pastBookings.map(renderBookingCard)}
             </div>
           )}
         </div>
