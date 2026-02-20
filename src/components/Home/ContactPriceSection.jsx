@@ -1,5 +1,12 @@
 import React from "react";
-import { MapPin, Phone, Mail, Clock, ChevronRight } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  ChevronRight,
+  DollarSign,
+} from "lucide-react";
 
 const ContactPriceSection = () => {
   return (
@@ -16,9 +23,7 @@ const ContactPriceSection = () => {
             </span>
             <div>
               <p className="font-medium text-base">ঠিকানা</p>
-              <p className="text-sm text-gray-500">
-                মিরপুর, ঢাকা - ১২১৬
-              </p>
+              <p className="text-sm text-gray-500">মিরপুর, ঢাকা - ১২১৬</p>
             </div>
           </li>
 
@@ -28,9 +33,7 @@ const ContactPriceSection = () => {
             </span>
             <div>
               <p className="font-medium text-base">ফোন</p>
-              <p className="text-sm text-gray-500">
-                +880 1712-345678
-              </p>
+              <p className="text-sm text-gray-500">+880 1712-345678</p>
             </div>
           </li>
 
@@ -40,9 +43,7 @@ const ContactPriceSection = () => {
             </span>
             <div>
               <p className="font-medium text-base">ইমেইল</p>
-              <p className="text-sm text-gray-500">
-                info@primeturf.com
-              </p>
+              <p className="text-sm text-gray-500">info@primeturf.com</p>
             </div>
           </li>
 
@@ -52,9 +53,7 @@ const ContactPriceSection = () => {
             </span>
             <div>
               <p className="font-medium text-base">খেলার সময়</p>
-              <p className="text-sm text-gray-500">
-                06:00 - 23:00
-              </p>
+              <p className="text-sm text-gray-500">06:00 - 23:00</p>
             </div>
           </li>
         </ul>
@@ -62,43 +61,41 @@ const ContactPriceSection = () => {
 
       {/* Price List Card */}
       <div className="bg-green-50 rounded-3xl p-12 shadow-2xl w-full md:w-[42%] hover:scale-105 transition-transform duration-300">
-        <h2 className="mb-10 text-2xl font-bold tracking-wide">
-          মূল্য তালিকা
-        </h2>
+        <h2 className="mb-10 text-2xl font-bold tracking-wide">মূল্য তালিকা</h2>
         <ul className="space-y-5">
           <li className="grid grid-cols-[1fr_auto] items-center bg-white px-7 py-3 rounded-xl hover:bg-green-100 transition-colors w-full">
             <span className="truncate text-base font-medium text-gray-700">
-              সকাল (6:00 - 8:00)
+              সকাল (6:00 - 12:00)
             </span>
-            <span className="whitespace-nowrap text-green-600 font-semibold text-base">
-              ৳1000/ঘণ্টা
-            </span>
-          </li>
-
-          <li className="grid grid-cols-[1fr_auto] items-center bg-white px-7 py-3 rounded-xl hover:bg-green-100 transition-colors w-full">
-            <span className="truncate text-base font-medium text-gray-700">
-              দিন (8:00 - 17:00)
-            </span>
-            <span className="whitespace-nowrap text-green-600 font-semibold text-base">
-              ৳1200-1500/ঘণ্টা
+            <span className="whitespace-nowrap text-green-600 font-semibold text-base flex items-center gap-1">
+              <DollarSign size={16} /> 800 / ঘণ্টা
             </span>
           </li>
 
           <li className="grid grid-cols-[1fr_auto] items-center bg-white px-7 py-3 rounded-xl hover:bg-green-100 transition-colors w-full">
             <span className="truncate text-base font-medium text-gray-700">
-              সন্ধ্যা (17:00 - 21:00)
+              দিন (12:00 - 4:00)
             </span>
-            <span className="whitespace-nowrap text-green-600 font-semibold text-base">
-              ৳1800-2000/ঘণ্টা
+            <span className="whitespace-nowrap text-green-600 font-semibold text-base flex items-center gap-1">
+              <DollarSign size={16} /> 800 / ঘণ্টা
             </span>
           </li>
 
           <li className="grid grid-cols-[1fr_auto] items-center bg-white px-7 py-3 rounded-xl hover:bg-green-100 transition-colors w-full">
             <span className="truncate text-base font-medium text-gray-700">
-              রাত (21:00 - 23:00)
+              সন্ধ্যা (4:00 - 12:00)
             </span>
-            <span className="whitespace-nowrap text-green-600 font-semibold text-base">
-              ৳1500-1800/ঘণ্টা
+            <span className="whitespace-nowrap text-green-600 font-semibold text-base flex items-center gap-1">
+              <DollarSign size={16} /> 800 / ঘণ্টা
+            </span>
+          </li>
+
+          <li className="grid grid-cols-[1fr_auto] items-center bg-white px-7 py-3 rounded-xl hover:bg-green-100 transition-colors w-full">
+            <span className="truncate text-base font-medium text-gray-700">
+              রাত (12:00 - 3:00)
+            </span>
+            <span className="whitespace-nowrap text-green-600 font-semibold text-base flex items-center gap-1">
+              <DollarSign size={16} /> 800 / ঘণ্টা
             </span>
           </li>
         </ul>

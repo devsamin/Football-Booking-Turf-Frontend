@@ -127,7 +127,7 @@ const CustomerDashboard = () => {
       <p className="text-gray-600 mb-4">{text}</p>
       {activeTab === "upcoming" && (
         <Link
-          to="/booking/new"
+          to="/booking"
           className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
         >
           এখনই বুক করুন
@@ -185,7 +185,7 @@ const CustomerDashboard = () => {
           </div>
 
           <Link
-            to="/booking/new"
+            to="/booking"
             className="mt-6 block w-full text-center bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
           >
             নতুন বুকিং করুন
