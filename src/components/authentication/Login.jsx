@@ -2,48 +2,62 @@
 // import { Link, useNavigate } from "react-router-dom";
 // import api from "../../services/api";
 // import { toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 
 // const Login = () => {
 //   const navigate = useNavigate();
+
 //   const [formData, setFormData] = useState({
 //     email: "",
 //     password: "",
 //   });
-//   const [error, setError] = useState("");
+
+//   const [errors, setErrors] = useState({});
+//   const [serverError, setServerError] = useState("");
 //   const [loading, setLoading] = useState(false);
 
 //   const handleChange = (e) => {
 //     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+//     // remove field error while typing
+//     setErrors({ ...errors, [e.target.name]: "" });
+//     setServerError("");
+//   };
+
+//   const validate = () => {
+//     const newErrors = {};
+
+//     if (!formData.email) {
+//       newErrors.email = "ইমেইল প্রয়োজন";
+//     }
+
+//     if (!formData.password) {
+//       newErrors.password = "পাসওয়ার্ড প্রয়োজন";
+//     }
+
+//     return newErrors;
 //   };
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
-//     setError("");
+
+//     const validationErrors = validate();
+//     if (Object.keys(validationErrors).length > 0) {
+//       setErrors(validationErrors);
+//       return;
+//     }
 
 //     try {
 //       setLoading(true);
+
 //       const res = await api.post("auth/login/", formData);
 
 //       localStorage.setItem("access", res.data.access);
 //       localStorage.setItem("refresh", res.data.refresh);
 
-//       // ✅ Success toast
 //       toast.success("আপনি সফলভাবে লগইন করেছেন!");
-
-//       navigate("/"); // home page or dashboard
+//       navigate("/");
 //     } catch (err) {
-//       // ✅ Error toast
-//       toast.error(
-//         err.response?.data?.message ||
-//           JSON.stringify(err.response?.data) ||
-//           "লগইন ব্যর্থ হয়েছে",
-//       );
-//       setError(
-//         err.response?.data?.message ||
-//           JSON.stringify(err.response?.data) ||
-//           "ইমেইল বা পাসওয়ার্ড ভুল",
-//       );
+//       setServerError("ইমেইল বা পাসওয়ার্ড সঠিক নয়");
 //     } finally {
 //       setLoading(false);
 //     }
@@ -74,9 +88,13 @@
 //           </Link>
 //         </div>
 
-//         {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+//         {/* Server Error */}
+//         {serverError && (
+//           <p className="text-red-500 text-sm mb-3">{serverError}</p>
+//         )}
 
 //         <form className="space-y-4" onSubmit={handleSubmit}>
+//           {/* Email */}
 //           <div>
 //             <label className="block text-sm mb-1">ইমেইল</label>
 //             <input
@@ -85,11 +103,18 @@
 //               placeholder="your@email.com"
 //               value={formData.email}
 //               onChange={handleChange}
-//               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-//               required
+//               className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+//                 errors.email
+//                   ? "border-red-500 focus:ring-red-300"
+//                   : "focus:ring-green-400"
+//               }`}
 //             />
+//             {errors.email && (
+//               <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+//             )}
 //           </div>
 
+//           {/* Password */}
 //           <div>
 //             <label className="block text-sm mb-1">পাসওয়ার্ড</label>
 //             <input
@@ -98,9 +123,15 @@
 //               placeholder="••••••••"
 //               value={formData.password}
 //               onChange={handleChange}
-//               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-//               required
+//               className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+//                 errors.password
+//                   ? "border-red-500 focus:ring-red-300"
+//                   : "focus:ring-green-400"
+//               }`}
 //             />
+//             {errors.password && (
+//               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+//             )}
 //           </div>
 
 //           <button
@@ -117,13 +148,16 @@
 // };
 
 // export default Login;
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const hasShownMessage = useRef(false); // ✅ prevent double toast
 
   const [formData, setFormData] = useState({
     email: "",
@@ -134,25 +168,24 @@ const Login = () => {
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✅ show message from previous page just once
+  useEffect(() => {
+    if (location.state?.message && !hasShownMessage.current) {
+      toast.info(location.state.message);
+      hasShownMessage.current = true;
+    }
+  }, [location]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    // remove field error while typing
     setErrors({ ...errors, [e.target.name]: "" });
     setServerError("");
   };
 
   const validate = () => {
     const newErrors = {};
-
-    if (!formData.email) {
-      newErrors.email = "ইমেইল প্রয়োজন";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "পাসওয়ার্ড প্রয়োজন";
-    }
-
+    if (!formData.email) newErrors.email = "ইমেইল প্রয়োজন";
+    if (!formData.password) newErrors.password = "পাসওয়ার্ড প্রয়োজন";
     return newErrors;
   };
 
@@ -174,7 +207,9 @@ const Login = () => {
       localStorage.setItem("refresh", res.data.refresh);
 
       toast.success("আপনি সফলভাবে লগইন করেছেন!");
-      navigate("/");
+
+      const redirectPath = location.state?.from || "/";
+      navigate(redirectPath);
     } catch (err) {
       setServerError("ইমেইল বা পাসওয়ার্ড সঠিক নয়");
     } finally {
@@ -198,7 +233,6 @@ const Login = () => {
           >
             লগইন
           </Link>
-
           <Link
             to="/register"
             className="flex-1 py-2 rounded-full text-sm font-medium text-gray-600 text-center"

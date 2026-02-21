@@ -21,7 +21,7 @@
 // ];
 
 // const BookingPage = () => {
-//   // ✅ Safe today (no timezone issue)
+//   // ✅ Safe today
 //   const getToday = () => {
 //     const today = new Date();
 //     return new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -41,7 +41,7 @@
 //   const [paymentMethod, setPaymentMethod] = useState("cash");
 //   const [loading, setLoading] = useState(false);
 
-//   // ✅ Fetch booked slots safely
+//   // ✅ Fetch booked slots
 //   useEffect(() => {
 //     const fetchBookedSlots = async () => {
 //       try {
@@ -90,7 +90,6 @@
 //       setSelectedSlots([]);
 //       setShowModal(false);
 
-//       // ✅ Immediately refresh booked slots
 //       const res = await api.get(`/bookings/by-date/?date=${date}`);
 //       setBookedSlots(res.data);
 //     } catch (err) {
@@ -128,6 +127,14 @@
 //                 onSelect={setSelectedDate}
 //                 className="rounded-md border"
 //               />
+
+//               {/* ✅ Selected Date Show */}
+//               <div className="mt-4 text-center">
+//                 <p className="text-sm text-muted-foreground">নির্বাচিত তারিখ</p>
+//                 <p className="font-semibold text-green-600 text-lg">
+//                   {formatDate(selectedDate)}
+//                 </p>
+//               </div>
 //             </CardContent>
 //           </Card>
 
@@ -161,14 +168,13 @@
 //                         disabled={isBooked}
 //                         onClick={() => toggleSlot(index)}
 //                         className={`w-full rounded-xl border p-4 text-left transition-all
-//                           ${
-//                             isBooked
-//                               ? "bg-red-50 border-red-400 text-red-600 cursor-not-allowed"
-//                               : isSelected
-//                                 ? "bg-blue-50 border-blue-400 ring-2 ring-blue-300"
-//                                 : "bg-green-50 border-green-200 hover:border-green-400"
-//                           }
-//                         `}
+//                         ${
+//                           isBooked
+//                             ? "bg-red-50 border-red-400 text-red-600 cursor-not-allowed"
+//                             : isSelected
+//                               ? "bg-blue-50 border-blue-400 ring-2 ring-blue-300"
+//                               : "bg-green-50 border-green-200 hover:border-green-400"
+//                         }`}
 //                       >
 //                         <div className="flex justify-between items-center">
 //                           <span className="font-semibold">{slot.time}</span>
@@ -205,20 +211,61 @@
 //         </div>
 //       </div>
 
-//       {/* Modal */}
+//       {/* ✅ Modal */}
 //       {showModal && (
 //         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-//           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
+//           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
+//             <button
+//               onClick={() => setShowModal(false)}
+//               className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
+//             >
+//               <X size={18} />
+//             </button>
+
 //             <h2 className="text-xl font-bold mb-4">বুকিং নিশ্চিত করুন</h2>
 
-//             <div className="flex justify-between mb-4">
+//             <div className="flex justify-between mb-2">
+//               <span>তারিখ:</span>
+//               <span className="font-medium">{formatDate(selectedDate)}</span>
+//             </div>
+
+//             <div className="flex justify-between mb-2">
 //               <span>মোট ঘণ্টা:</span>
 //               <span>{selectedSlots.length}</span>
 //             </div>
 
-//             <div className="flex justify-between font-bold text-lg mb-6">
+//             <div className="flex justify-between font-bold text-lg mb-4">
 //               <span>মোট মূল্য:</span>
 //               <span className="text-green-600">৳{totalPrice}</span>
+//             </div>
+
+//             {/* Payment Option */}
+//             <div className="mb-6">
+//               <p className="font-semibold mb-2">
+//                 পেমেন্ট পদ্ধতি নির্বাচন করুন:
+//               </p>
+
+//               <div className="space-y-2">
+//                 <label className="flex items-center gap-2 border rounded-lg p-3 cursor-pointer">
+//                   <input
+//                     type="radio"
+//                     value="cash"
+//                     checked={paymentMethod === "cash"}
+//                     onChange={() => setPaymentMethod("cash")}
+//                   />
+//                   Cash On Field
+//                 </label>
+
+//                 <label className="flex items-center gap-2 border rounded-lg p-3 cursor-pointer">
+//                   <input
+//                     type="radio"
+//                     value="online"
+//                     checked={paymentMethod === "online"}
+//                     onChange={() => setPaymentMethod("online")}
+//                   />
+//                   Direct Online Payment
+//                 </label>
+//               </div>
 //             </div>
 
 //             <div className="flex justify-end gap-3">
@@ -253,6 +300,7 @@ import { CardHeader } from "../ui/CardHeader";
 import { CardTitle } from "../ui/CardTitle";
 import { CardContent } from "../ui/CardContent";
 import api from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const timeSlots = [
   { time: "06:00 - 07:00", price: 1000 },
@@ -266,7 +314,12 @@ const timeSlots = [
 ];
 
 const BookingPage = () => {
-  // ✅ Safe today
+  const navigate = useNavigate();
+
+  const isAuthenticated = () => {
+    return !!localStorage.getItem("access");
+  };
+
   const getToday = () => {
     const today = new Date();
     return new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -286,7 +339,6 @@ const BookingPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [loading, setLoading] = useState(false);
 
-  // ✅ Fetch booked slots
   useEffect(() => {
     const fetchBookedSlots = async () => {
       try {
@@ -302,6 +354,16 @@ const BookingPage = () => {
   }, [selectedDate]);
 
   const toggleSlot = (index) => {
+    if (!isAuthenticated()) {
+      navigate("/login", {
+        state: {
+          message: "বুকিং করতে লগইন করুন",
+          from: "/booking",
+        },
+      });
+      return;
+    }
+
     setSelectedSlots((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
     );
@@ -313,6 +375,16 @@ const BookingPage = () => {
   );
 
   const handleConfirmBooking = async () => {
+    if (!isAuthenticated()) {
+      navigate("/login", {
+        state: {
+          message: "বুকিং করতে লগইন করুন",
+          from: "/booking",
+        },
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const date = formatDate(selectedDate);
@@ -331,7 +403,6 @@ const BookingPage = () => {
       }
 
       alert("বুকিং সফল হয়েছে!");
-
       setSelectedSlots([]);
       setShowModal(false);
 
@@ -344,7 +415,6 @@ const BookingPage = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
