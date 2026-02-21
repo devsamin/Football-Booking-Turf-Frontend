@@ -7,6 +7,7 @@ import {
   ChevronRight,
   DollarSign,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ContactPriceSection = () => {
   return (
@@ -100,9 +101,12 @@ const ContactPriceSection = () => {
           </li>
         </ul>
 
-        <button className="mt-10 w-full rounded-xl bg-green-600 px-6 py-4 text-base text-white font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2">
+        <Link
+          to={"/booking"}
+          className="mt-10 w-full rounded-xl bg-green-600 px-6 py-4 text-base text-white font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+        >
           বুকিং দেখুন <ChevronRight size={18} />
-        </button>
+        </Link>
       </div>
     </div>
   );
