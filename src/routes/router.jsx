@@ -7,6 +7,7 @@ import Login from "../components/authentication/Login";
 import CustomerDashboard from "../components/dashboard/CustomerDashboard";
 import BookingPage from "../components/booking/BookingPage";
 import MyBookings from "../components/booking/MyBookings";
+import PaymentSuccessPage from "../components/payment/PaymentSuccessPage";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
         path: "/booking",
         // element: <Booking />,
         element: <BookingPage />,
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccessPage />,
       },
 
       {
