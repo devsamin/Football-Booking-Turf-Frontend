@@ -325,6 +325,7 @@ import { CardTitle } from "../ui/CardTitle";
 import { CardContent } from "../ui/CardContent";
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const timeSlots = [
   { time: "06:00 - 07:00", price: 1000 },
@@ -425,7 +426,7 @@ const BookingPage = () => {
           });
         }
 
-        alert("বুকিং সফল হয়েছে!");
+        toast.success("বুকিং সফল হয়েছে!");
         setSelectedSlots([]);
         setShowModal(false);
         fetchBookedSlots();
@@ -451,7 +452,7 @@ const BookingPage = () => {
         }
       }
     } catch (err) {
-      alert("কিছু সমস্যা হয়েছে");
+      toast.error("কিছু সমস্যা হয়েছে");
     }
 
     setLoading(false);

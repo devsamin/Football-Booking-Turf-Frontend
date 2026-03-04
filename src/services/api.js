@@ -1,3 +1,23 @@
+// import axios from "axios";
+
+// const api = axios.create({
+//   baseURL: "http://127.0.0.1:8000/api/",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
+
+// // 🔥 Request interceptor — সব request এ token যোগ হবে
+// api.interceptors.request.use((config) => {
+//   const token = localStorage.getItem("access");
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+
+// export default api;
+
 import axios from "axios";
 
 const api = axios.create({
@@ -7,13 +27,59 @@ const api = axios.create({
   },
 });
 
-// 🔥 Request interceptor — সব request এ token যোগ হবে
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+let loaderHandler;
+let requestCount = 0;
+
+export const injectLoader = (handler) => {
+  loaderHandler = handler;
+};
+
+// 🔥 Request Interceptor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    requestCount++;
+    loaderHandler?.(true);
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+// 🔥 Response Interceptor
+api.interceptors.response.use(
+  (response) => {
+    requestCount--;
+
+    if (requestCount === 0) {
+      setTimeout(() => loaderHandler?.(false), 300); // smooth hide
+    }
+
+    return response;
+  },
+  (error) => {
+    requestCount--;
+
+    if (requestCount === 0) {
+      setTimeout(() => loaderHandler?.(false), 300);
+    }
+
+    // 🔐 Token expired auto logout
+    if (error.response?.status === 401) {
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default api;
