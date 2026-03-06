@@ -17,7 +17,6 @@
 // });
 
 // export default api;
-
 import axios from "axios";
 
 const api = axios.create({
@@ -59,7 +58,7 @@ api.interceptors.response.use(
     requestCount--;
 
     if (requestCount === 0) {
-      setTimeout(() => loaderHandler?.(false), 300); // smooth hide
+      setTimeout(() => loaderHandler?.(false), 300);
     }
 
     return response;
@@ -71,11 +70,16 @@ api.interceptors.response.use(
       setTimeout(() => loaderHandler?.(false), 300);
     }
 
-    // 🔐 Token expired auto logout
+    // 🔐 Token expired হলে logout
     if (error.response?.status === 401) {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      window.location.href = "/login";
+      const token = localStorage.getItem("access");
+
+      // শুধু তখন redirect করবে যখন user আগে login ছিল
+      if (token) {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        window.location.href = "/login";
+      }
     }
 
     return Promise.reject(error);
