@@ -1,5 +1,10 @@
 import React from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
+import bkash from "../assets/images/bkash.jpg";
+import nagad from "../assets/images/nagad.jpg";
+import rocket from "../assets/images/rocat.png";
+import mastercard from "../assets/images/mastercard.png";
+import visacard from "../assets/images/visa.jpg";
 
 export default function Footer() {
   return (
@@ -11,7 +16,8 @@ export default function Footer() {
             প্রাইম ফুটবল টার্ফ
           </h3>
           <p className="text-sm leading-relaxed">
-            ঢাকার সেরা ফুটবল টার্ফ | আধুনিক সুবিধা সহ উন্নতমানের কৃত্রিম ঘাস।
+            সাতকানিয়ার সেরা ফুটবল টার্ফ | আধুনিক সুবিধা সহ উন্নতমানের কৃত্রিম
+            ঘাস।
           </p>
         </div>
 
@@ -20,10 +26,10 @@ export default function Footer() {
           <h4 className="text-xl font-semibold text-white mb-4">যোগাযোগ</h4>
           <ul className="space-y-3 text-sm">
             <li className="flex items-center gap-2">
-              <MapPin size={16} /> মিরপুর, ঢাকা - ১২১৬
+              <MapPin size={16} /> সাতকানিয়া, চট্রগ্রাম - ১২১৬
             </li>
             <li className="flex items-center gap-2">
-              <Phone size={16} /> +880 1712-345678
+              <Phone size={16} /> +880 1603 690 189
             </li>
             <li className="flex items-center gap-2">
               <Mail size={16} /> info@primeturf.com
@@ -45,11 +51,15 @@ export default function Footer() {
           আমরা যে পেমেন্ট গ্রহণ করি
         </h4>
         <div className="flex flex-wrap justify-center gap-6">
-          <img src="/payments/bkash.png" alt="bKash" className="h-8 object-contain" />
-          <img src="/payments/nagad.png" alt="Nagad" className="h-8 object-contain" />
-          <img src="/payments/rocket.png" alt="Rocket" className="h-8 object-contain" />
-          <img src="/payments/visa.png" alt="Visa" className="h-8 object-contain" />
-          <img src="/payments/mastercard.png" alt="Mastercard" className="h-8 object-contain" />
+          <img src={bkash} alt="bKash" className="h-8 object-contain" />
+          <img src={nagad} alt="Nagad" className="h-8 object-contain" />
+          <img src={rocket} alt="Rocket" className="h-8 object-contain" />
+          <img src={visacard} alt="Visa" className="h-8 object-contain" />
+          <img
+            src={mastercard}
+            alt="Mastercard"
+            className="h-8 object-contain"
+          />
         </div>
       </div>
 

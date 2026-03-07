@@ -8,6 +8,7 @@ import CustomerDashboard from "../components/dashboard/CustomerDashboard";
 import BookingPage from "../components/booking/BookingPage";
 import MyBookings from "../components/booking/MyBookings";
 import PaymentSuccessPage from "../components/payment/PaymentSuccessPage";
+import NotFoundPage from "../components/ui/NotFoundPage";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/customer-dashboard",
         element: <CustomerDashboard />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

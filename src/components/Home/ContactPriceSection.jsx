@@ -24,7 +24,9 @@ const ContactPriceSection = () => {
             </span>
             <div>
               <p className="font-medium text-base">ঠিকানা</p>
-              <p className="text-sm text-gray-500">মিরপুর, ঢাকা - ১২১৬</p>
+              <p className="text-sm text-gray-500">
+                সাতকানিয়া, চট্রগ্রাম - ১২১৬
+              </p>
             </div>
           </li>
 
@@ -34,7 +36,7 @@ const ContactPriceSection = () => {
             </span>
             <div>
               <p className="font-medium text-base">ফোন</p>
-              <p className="text-sm text-gray-500">+880 1712-345678</p>
+              <p className="text-sm text-gray-500">+880 1603-690-189</p>
             </div>
           </li>
 

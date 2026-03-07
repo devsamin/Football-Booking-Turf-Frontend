@@ -148,6 +148,10 @@
 // };
 
 // export default Login;
+
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../../firebase";
+import { FcGoogle } from "react-icons/fc";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import api from "../../services/api";
@@ -189,6 +193,34 @@ const Login = () => {
     return newErrors;
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const validationErrors = validate();
+  //   if (Object.keys(validationErrors).length > 0) {
+  //     setErrors(validationErrors);
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+
+  //     const res = await api.post("auth/login/", formData);
+
+  //     localStorage.setItem("access", res.data.access);
+  //     localStorage.setItem("refresh", res.data.refresh);
+
+  //     toast.success("আপনি সফলভাবে লগইন করেছেন!");
+
+  //     const redirectPath = location.state?.from || "/";
+  //     navigate(redirectPath);
+  //   } catch (err) {
+  //     setServerError("ইমেইল বা পাসওয়ার্ড সঠিক নয়");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -214,6 +246,28 @@ const Login = () => {
       setServerError("ইমেইল বা পাসওয়ার্ড সঠিক নয়");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ Google Login Function (OUTSIDE)
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const res = await api.post("auth/google-login/", {
+        email: user.email,
+        name: user.displayName,
+      });
+
+      localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
+
+      toast.success("Google দিয়ে সফলভাবে লগইন হয়েছে");
+
+      navigate("/");
+    } catch (error) {
+      toast.error("Google login ব্যর্থ হয়েছে");
     }
   };
 
@@ -295,6 +349,22 @@ const Login = () => {
             {loading ? "লোড হচ্ছে..." : "লগইন করুন"}
           </button>
         </form>
+
+        {/* Divider  */}
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t"></div>
+          <span className="mx-3 text-gray-400 text-sm">অথবা</span>
+          <div className="flex-grow border-t"></div>
+        </div>
+
+        {/* Google Login */}
+        <button
+          onClick={handleGoogleLogin}
+          className=" cursor-pointer w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition font-medium"
+        >
+          <FcGoogle size={20} />
+          Google দিয়ে লগইন করুন
+        </button>
       </div>
     </div>
   );
